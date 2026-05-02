@@ -12,6 +12,9 @@ public class ReservationService {
     private final Map<String, IRoom> rooms = new HashMap<>();
     private final Map<IRoom, List<Reservation>> reservations = new HashMap<>();
 
+    private String lastSearchCheckIn;
+    private String lastSearchCheckOut;
+
     private ReservationService() {}
 
     public static ReservationService getInstance() {
@@ -88,9 +91,20 @@ public class ReservationService {
         return allReservations;
     }
 
+    public String getLastSearchCheckIn() {
+        return lastSearchCheckIn;
+    }
+
+    public String getLastSearchCheckOut() {
+        return lastSearchCheckOut;
+    }
+
     // -------------------- FIND ROOMS --------------------
 
     public Collection<IRoom> findRooms(String checkInDate, String checkOutDate) {
+
+        this.lastSearchCheckIn = checkInDate;
+        this.lastSearchCheckOut = checkOutDate;
 
         List<IRoom> availableRooms = new ArrayList<>();
 
@@ -100,7 +114,6 @@ public class ReservationService {
             }
         }
 
-        // If no rooms → try recommended (+7 days)
         if (availableRooms.isEmpty()) {
             return findRecommendedRooms(checkInDate, checkOutDate);
         }
@@ -135,6 +148,9 @@ public class ReservationService {
 
         String newCheckIn = ValidateDate.addDays(checkInDate, 7);
         String newCheckOut = ValidateDate.addDays(checkOutDate, 7);
+
+        this.lastSearchCheckIn = newCheckIn;
+        this.lastSearchCheckOut = newCheckOut;
 
         List<IRoom> recommended = new ArrayList<>();
 

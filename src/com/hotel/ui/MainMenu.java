@@ -101,7 +101,30 @@ public class MainMenu {
             System.out.print("Enter your email: ");
             String email = scanner.nextLine();
 
-            Reservation reservation = hotelResource.bookARoom(email, selectedRoom, checkIn, checkOut);
+            String finalCheckIn = hotelResource.getLastSearchCheckIn();
+            String finalCheckOut = hotelResource.getLastSearchCheckOut();
+            boolean isRecommended = !finalCheckIn.equals(checkIn) || !finalCheckOut.equals(checkOut);
+
+            if (isRecommended) {
+                System.out.println("Rooms are not available for the selected dates.");
+                System.out.println("Recommended rooms are available for Check-In: " + finalCheckIn + " and Check-Out: " + finalCheckOut);
+
+                while (true) {
+                    System.out.print("Do you want to book for recommended dates? (y/n): ");
+                    String choice = scanner.nextLine().trim().toLowerCase();
+
+                    if ("y".equals(choice)) {
+                        break; // Proceed with booking
+                    } else if ("n".equals(choice)) {
+                        System.out.println("Booking canceled.");
+                        return; // Return to main menu
+                    } else {
+                        System.out.println("Invalid input. Please enter 'y' or 'n'.");
+                    }
+                }
+            }
+
+            Reservation reservation = hotelResource.bookARoom(email, selectedRoom, finalCheckIn, finalCheckOut);
 
             System.out.println("Reservation successful!");
             System.out.println(reservation);

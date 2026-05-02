@@ -37,6 +37,14 @@ public class HotelResource {
         return reservationService.findRooms(checkIn, checkOut);
     }
 
+    public String getLastSearchCheckIn() {
+        return reservationService.getLastSearchCheckIn();
+    }
+
+    public String getLastSearchCheckOut() {
+        return reservationService.getLastSearchCheckOut();
+    }
+
     // -------------------- RESERVATION --------------------
 
     public Reservation bookARoom(String customerEmail, IRoom room,
